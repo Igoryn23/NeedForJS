@@ -19,11 +19,20 @@ const keys = {
 const setting = {
     start: false,
     score: 0,
-    speed: 3
+    speed: 3,
+    traffic: 3
 };
 
 function startGame() {
     start.classList.add('hide');
+    // добавка разделительных линий
+    for (let i = 0; i < 20; i++) {
+        const line = document.createElement('div');
+        line.classList.add('line');
+        line.style.top = (i * 95) + 'px';
+        line.y = (i * 100); // чтобы двигать полосу
+        gameArea.appendChild(line); // добавляем на страницу 
+    }
     setting.start = true;
     gameArea.appendChild(car);
     setting.x = car.offsetLeft; // координата по горизонтали 
@@ -33,6 +42,8 @@ function startGame() {
 
 function playGame() {
     if (setting.start) {
+        moveRoad();
+
         if (keys.ArrowLeft && setting.x > 0) {
             setting.x -= setting.speed;
         }
@@ -60,4 +71,16 @@ function startRun(event) {
 function stopRun(event) {
     event.preventDefault();
     keys[event.key] = false;
+}
+
+function moveRoad() {
+    let lines = document.querySelectorAll('.line');
+    lines.forEach(function(line) {
+        line.y += setting.speed;
+        line.style.top = line.y + 'px';
+        // ???
+        if (line.y >= document.documentElement.clientHeight) {
+            line.y = -100;
+        }
+    })
 }
